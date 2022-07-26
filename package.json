@@ -4,7 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "frontend:install": "cd frontend && npm install",
+    "frontend:build": "cd frontend && ",
+    "frontend:test": "cd frontend && ",
+    "frontend:deploy": "cd frontend && ",
+    "backend:install": "cd backend && npm install",
+    "backend:build": "cd backend && npx tsc",
+    "backend:test": "cd backend &&",
+    "backend:depoly": "cd backend && serverless deploy",
+    "install": "npm run frontend:install && npm run backend:install",
+    "build": "npm run frontend:build && npm run backend:build",
+    "test": "npm run frontend:test && npm run backend:test",
+    "deploy": "npm run frontend:deploy && npm run backend:deploy"
   },
   "keywords": [],
   "author": "",

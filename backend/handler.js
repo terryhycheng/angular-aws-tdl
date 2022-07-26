@@ -1,5 +1,6 @@
 const serverless = require("serverless-http");
 const express = require("express");
+const { toDo_routes } = require("./routes/toDo");
 const app = express();
 
 app.get("/", (req, res, next) => {
@@ -8,18 +9,10 @@ app.get("/", (req, res, next) => {
   });
 });
 
-app.get("/hello", (req, res, next) => {
-  return res.status(200).json({
-    message: "Hello from path!",
-  });
-});
+// app.listen(5000, () => {
+//   console.log(`Server is running on port 5000!`);
+// });
 
-app.use((req, res, next) => {
-  return res.status(404).json({
-    error: "Not Found",
-  });
-});
-
-export default app;
+toDo_routes(app);
 
 module.exports.handler = serverless(app);
