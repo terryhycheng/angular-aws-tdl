@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-login-box',
@@ -6,17 +9,36 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login-box.component.scss'],
 })
 export class LoginBoxComponent implements OnInit {
-  isLogin: boolean = true;
+  authForm = new FormGroup({
+    username: new FormControl(''),
+    password: new FormControl(''),
+    email: new FormControl(''),
+    reconfirm: new FormControl(''),
+  });
+  isRegister: boolean = false;
 
-  constructor() {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.watchLogin().subscribe();
+  }
 
   onLogin() {
-    if (!this.isLogin) this.isLogin = true;
+    this.isRegister = false;
   }
 
   onRegister() {
-    if (this.isLogin) this.isLogin = false;
+    this.isRegister = true;
+  }
+
+  login() {
+    const authData = {
+      username: this.authForm.value.username,
+      password: this.authForm.value.password,
+    };
+    console.log(authData);
+    this.authService.login();
+    this.authForm.reset();
+    this.router.navigate(['']);
   }
 }

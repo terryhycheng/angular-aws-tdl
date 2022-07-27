@@ -1,0 +1,39 @@
+<!-- Content header -->
+<div *ngIf="isLogin">
+  <div class="flex justify-between items-center">
+    <nav
+      class="min-h-[90px] underline flex gap-4 text-xl font-medium items-center"
+    >
+      <a
+        routerLink="/"
+        [ngClass]="isTask ? '' : 'text-gray-300'"
+        (click)="onTask()"
+        >Tasks</a
+      >
+      <a
+        routerLink="/"
+        [ngClass]="isTask ? 'text-gray-300' : ''"
+        (click)="onFinished()"
+        >Finished</a
+      >
+    </nav>
+    <button
+      routerLink="/create"
+      class="button border-2 border-blue-600 !text-blue-600 hover:bg-blue-600 hover:!text-white max-h-14"
+    >
+      <mat-icon class="!fill-blue-600 mr-2">add</mat-icon>
+      New Task
+    </button>
+  </div>
+  <app-card></app-card>
+</div>
+<app-message-box
+  *ngIf="!isLogin"
+  [message]="'Please log in to start using.'"
+  [icon]="'login'"
+></app-message-box>
+<app-message-box
+  *ngIf="isError"
+  [message]="'Error Occured!'"
+  [icon]="'error'"
+></app-message-box>

@@ -1,36 +1,36 @@
 <div class="border-2 min-h-[15vh] rounded-md my-4 p-8 md:px-12">
   <div class="flex md:flex-row flex-col justify-between items-center">
     <h3 class="text-3xl font-bold">Log in / Register</h3>
-    <div
-      class="min-h-[60px] underline flex gap-4 text-xl font-medium items-center"
-    >
-      <a
-        routerLink="/"
-        [ngClass]="isLogin ? '' : 'text-gray-300'"
+    <div class="min-h-[60px] flex gap-4 text-xl font-medium items-center">
+      <button
+        [ngClass]="isRegister ? 'text-gray-300' : 'underline'"
         (click)="onLogin()"
-        >Log in</a
       >
-      <a
-        routerLink="/"
-        [ngClass]="isLogin ? 'text-gray-300' : ''"
+        Log in
+      </button>
+      <button
+        [ngClass]="isRegister ? 'underline' : 'text-gray-300'"
         (click)="onRegister()"
-        >Register</a
       >
+        Register
+      </button>
     </div>
   </div>
   <hr class="mb-6 md:my-6" />
-  <form #form="ngForm" class="flex flex-col gap-4">
+  <form class="flex flex-col gap-4" [formGroup]="authForm" (ngSubmit)="login()">
     <div>
-      <label for="title" class="text-lg font-medium">Username</label>
+      <label for="username" class="text-lg font-medium">Username</label>
       <input
-        name="title"
+        formControlName="username"
+        name="username"
         type="text"
         class="w-full border-gray-400 rounded-md mt-2"
       />
     </div>
-    <div *ngIf="!isLogin">
+    <div *ngIf="isRegister">
       <label for="email" class="text-lg font-medium">Email</label>
       <input
+        formControlName="email"
         name="email"
         type="email"
         class="w-full border-gray-400 rounded-md mt-2"
@@ -39,24 +39,35 @@
     <div>
       <label for="password" class="text-lg font-medium">Password</label>
       <input
+        formControlName="password"
         name="password"
         type="password"
         class="w-full border-gray-400 rounded-md mt-2"
       />
     </div>
-    <div *ngIf="!isLogin">
+    <div *ngIf="isRegister">
       <label for="re-password" class="text-lg font-medium"
         >Re-enter password</label
       >
       <input
+        formControlName="reconfirmed"
         name="re-password"
         type="password"
         class="w-full border-gray-400 rounded-md mt-2"
       />
     </div>
     <div class="flex gap-4 justify-center md:justify-end w-full mt-4">
-      <button class="bg-blue-600 hover:bg-blue-500 button w-full !py-4">
-        {{ isLogin ? "Log in" : "Register" }}
+      <button
+        *ngIf="!isRegister"
+        class="bg-blue-600 hover:bg-blue-500 button w-full !py-4"
+      >
+        Log in
+      </button>
+      <button
+        *ngIf="isRegister"
+        class="bg-blue-600 hover:bg-blue-500 button w-full !py-4"
+      >
+        Register
       </button>
     </div>
   </form>

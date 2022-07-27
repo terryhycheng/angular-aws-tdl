@@ -9,10 +9,6 @@ app.get("/", (req, res, next) => {
   });
 });
 
-// app.listen(5000, () => {
-//   console.log(`Server is running on port 5000!`);
-// });
-
 toDo_routes(app);
 
 module.exports.handler = serverless(app);
