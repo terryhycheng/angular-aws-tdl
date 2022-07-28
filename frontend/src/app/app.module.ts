@@ -14,6 +14,8 @@ import { AddTaskBoxComponent } from './components/add-task-box/add-task-box.comp
 import { ToDoComponent } from './components/to-do/to-do.component';
 import { AuthBarComponent } from './components/auth-bar/auth-bar.component';
 import { ErrorComponent } from './components/error/error.component';
+import { HttpClientModule } from '@angular/common/http';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { ErrorComponent } from './components/error/error.component';
     ToDoComponent,
     AuthBarComponent,
     ErrorComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,6 +36,7 @@ import { ErrorComponent } from './components/error/error.component';
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -25,7 +25,25 @@
       New Task
     </button>
   </div>
-  <app-card></app-card>
+  <section *ngIf="isTask">
+    <div *ngFor="let toDo of toDos">
+      <app-card
+        [toDo]="toDo"
+        (update)="updateTodo($event)"
+        (delete)="deleteTodo($event)"
+        *ngIf="!toDo.isFinished"
+      ></app-card>
+    </div>
+  </section>
+  <section *ngIf="!isTask">
+    <div *ngFor="let toDo of toDos">
+      <app-card
+        [toDo]="toDo"
+        (update)="updateTodo($event)"
+        *ngIf="toDo.isFinished"
+      ></app-card>
+    </div>
+  </section>
 </div>
 <app-message-box
   *ngIf="!isLogin"

@@ -7,13 +7,14 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./auth-bar.component.scss'],
 })
 export class AuthBarComponent implements OnInit {
-  name: string = 'terryhycheng';
+  name: string = '';
   isLogin: boolean = this.authService.isLogin;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.watchLogin().subscribe((value) => (this.isLogin = value));
+    const token = this.authService.getToken();
   }
 
   logout() {

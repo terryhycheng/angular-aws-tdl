@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AuthData } from 'src/app/models/authData.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-box',
@@ -10,10 +11,12 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class LoginBoxComponent implements OnInit {
   authForm = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl(''),
-    email: new FormControl(''),
-    reconfirm: new FormControl(''),
+    username: new FormControl(
+      '',
+      Validators.compose([Validators.required, Validators.minLength(5)])
+    ),
+    password: new FormControl('', Validators.compose([Validators.required])),
+    email: new FormControl('', Validators.email),
   });
   isRegister: boolean = false;
 
@@ -21,6 +24,8 @@ export class LoginBoxComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.watchLogin().subscribe();
+    this.authService.authCheck();
+    this.authService.isLogin && this.router.navigate(['']);
   }
 
   onLogin() {
@@ -32,13 +37,15 @@ export class LoginBoxComponent implements OnInit {
   }
 
   login() {
-    const authData = {
-      username: this.authForm.value.username,
-      password: this.authForm.value.password,
+    const authData: AuthData = {
+      username: this.authForm.value.username!,
+      password: this.authForm.value.password!,
     };
+    if (this.authForm.value.email) authData.email = this.authForm.value.email;
+    //Send to server
     console.log(authData);
-    this.authService.login();
+    //Check login status
+    this.authService.login(authData);
     this.authForm.reset();
-    this.router.navigate(['']);
   }
 }

@@ -12,10 +12,10 @@ datasource db {
 }
 
 model User {
-  id        Int      @unique @default(autoincrement())
-  username  String   @db.VarChar(50)
+  id        Int      @default(autoincrement()) @unique 
+  username  String   @db.VarChar(50) @unique 
   email     String   @db.VarChar(50)
-  password  String   @db.VarChar(50)
+  password  String
   createdAt DateTime @default(now())
   todos     Todo[]
 }

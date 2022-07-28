@@ -45,29 +45,16 @@
         class="w-full border-gray-400 rounded-md mt-2"
       />
     </div>
-    <div *ngIf="isRegister">
-      <label for="re-password" class="text-lg font-medium"
-        >Re-enter password</label
-      >
-      <input
-        formControlName="reconfirmed"
-        name="re-password"
-        type="password"
-        class="w-full border-gray-400 rounded-md mt-2"
-      />
-    </div>
+
     <div class="flex gap-4 justify-center md:justify-end w-full mt-4">
       <button
-        *ngIf="!isRegister"
-        class="bg-blue-600 hover:bg-blue-500 button w-full !py-4"
+        [disabled]="authForm.invalid"
+        [ngClass]="
+          authForm.invalid ? 'bg-slate-200' : 'bg-blue-600 hover:bg-blue-500'
+        "
+        class="button w-full !py-4"
       >
-        Log in
-      </button>
-      <button
-        *ngIf="isRegister"
-        class="bg-blue-600 hover:bg-blue-500 button w-full !py-4"
-      >
-        Register
+        {{ isRegister ? "Register" : "Log in" }}
       </button>
     </div>
   </form>
