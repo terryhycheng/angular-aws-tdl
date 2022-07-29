@@ -32,8 +32,9 @@ export class AddTaskBoxComponent implements OnInit {
       userId: this.authService.getToken().id,
       token: localStorage.getItem('authToken'),
     };
-    this.toDoService.createTodo(data).subscribe();
-    this.newTodo.reset();
-    this.router.navigate(['']);
+    this.toDoService.createTodo(data).subscribe(() => {
+      this.newTodo.reset();
+      this.router.navigate(['']);
+    });
   }
 }

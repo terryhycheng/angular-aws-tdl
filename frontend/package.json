@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "deploy": "npm install -f && npm run build && chmod +x bin/deploy.sh && bin/deploy.sh",
+    "aws": "chmod +x bin/deploy.sh && bin/deploy.sh",
+    "deploy": "npm install -f && npm run build && npm run aws",
     "test": "ng lint"
   },
   "private": true,
