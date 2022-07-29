@@ -5,7 +5,7 @@ export const token_secret = process.env.TOKEN_SECRET;
 
 export const verifyAuthToken: RequestHandler = (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const token = req.body.token;
     if (token) {
       token_secret
         ? jwt.verify(token, token_secret)

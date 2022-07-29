@@ -29,8 +29,8 @@ export class AddTaskBoxComponent implements OnInit {
     const data = {
       title: this.newTodo.value.title!,
       task: this.newTodo.value.task!,
-      //Need Change : Get the usrId from token
-      userId: 4,
+      userId: this.authService.getToken().id,
+      token: localStorage.getItem('authToken'),
     };
     this.toDoService.createTodo(data).subscribe();
     this.newTodo.reset();

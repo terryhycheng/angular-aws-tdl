@@ -32,18 +32,80 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toDo_routes = void 0;
+exports.auth_routes = void 0;
+const client_1 = require("@prisma/client");
 const bcrypt = __importStar(require("bcrypt"));
-const toDo_routes = (app) => {
+const jwt = __importStar(require("jsonwebtoken"));
+const salt = parseInt(process.env.SALT_ROUND);
+const prisma = new client_1.PrismaClient();
+const auth_routes = (app) => {
     app.post("/login", login);
+    app.post("/auth", authCheck);
+    app.post("/register", register);
 };
-exports.toDo_routes = toDo_routes;
+exports.auth_routes = auth_routes;
+//Login: return JWT token
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, password } = req.body;
     try {
-        const hash = yield bcrypt.hashSync(req.body.password, 10);
-        res.status(200).send({ username: req.body.username, password: hash });
+        const user = yield prisma.user.findUnique({
+            where: {
+                username: username,
+            },
+        });
+        const isCorrectPassword = user
+            ? bcrypt.compareSync(password, user.password)
+            : null;
+        if (isCorrectPassword) {
+            const data = {
+                id: user.id,
+                username: username,
+                email: user.email,
+            };
+            const token = jwt.sign(data, process.env.TOKEN_SECRET);
+            res.status(200).send({ token: token });
+        }
+        else {
+            res.status(400).send({ message: `Wrong login credentials.` });
+        }
     }
     catch (error) {
-        res.status(400).send({ message: error });
+        res.status(400).send({ message: `${error}` });
+    }
+});
+//Auth Check: return decoded message
+const authCheck = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { token } = req.body;
+    try {
+        const decoded = jwt.decode(token);
+        res.status(200).send(decoded);
+    }
+    catch (error) {
+        res.status(400).send({ message: `${error}` });
+    }
+});
+//Register: return JWT token
+const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, password, email } = req.body;
+    try {
+        const hash = bcrypt.hashSync(password, salt);
+        const data = {
+            username: username,
+            password: hash,
+            email: email,
+        };
+        const newUser = yield prisma.user.create({
+            data: data,
+        });
+        if (newUser) {
+            const token = jwt.sign({ id: newUser.id, username: data.username, email: data.email }, process.env.TOKEN_SECRET);
+            res.status(200).send({ token: token });
+        }
+        else {
+            res.status(400).send({ message: `Cannot create user: ${newUser}` });
+        }
+    }
+    catch (error) {
+        res.status(400).send({ message: `${error}` });
     }
 });

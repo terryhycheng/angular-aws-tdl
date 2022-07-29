@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { AuthData, ReturnToken } from '../models/authData.model';
+import { AuthData } from '../models/authData.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,6 @@ export class AuthService {
 
   authCheck() {
     try {
-      console.log('check');
       const token = localStorage.getItem('authToken');
       if (token) {
         this.isLogin = true;
@@ -37,12 +36,15 @@ export class AuthService {
   login(authData: AuthData) {
     this.http
       .post<{ token: string }>(`${this.serverUrl}/login`, authData)
-      .subscribe((res) => {
-        localStorage.setItem('authToken', res.token);
-        this.isLogin = true;
-        this.loginSub.next(this.isLogin);
-        this.router.navigate(['']);
-      });
+      .subscribe(
+        (res) => {
+          localStorage.setItem('authToken', res.token);
+          this.isLogin = true;
+          this.loginSub.next(this.isLogin);
+          this.router.navigate(['']);
+        },
+        (error) => {}
+      );
   }
 
   logout() {
@@ -53,6 +55,28 @@ export class AuthService {
   }
 
   getToken() {
-    return localStorage.getItem('authToken')!;
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const userData = JSON.parse(window.atob(token.split('.')[1]));
+      return userData;
+    } else {
+      return null;
+    }
+  }
+
+  register(authData: AuthData) {
+    this.http
+      .post<{ token: string }>(`${this.serverUrl}/register`, authData)
+      .subscribe(
+        (res) => {
+          localStorage.setItem('authToken', `${res.token}`);
+          this.isLogin = true;
+          this.loginSub.next(this.isLogin);
+          this.router.navigate(['']);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 }

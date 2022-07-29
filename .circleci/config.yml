@@ -81,3 +81,5 @@ workflows:
       - deploy:
           requires:
             - hold
+          context:
+            - Angular-AWS-TDL

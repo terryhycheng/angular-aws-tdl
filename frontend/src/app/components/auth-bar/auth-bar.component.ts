@@ -13,8 +13,15 @@ export class AuthBarComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.watchLogin().subscribe((value) => (this.isLogin = value));
-    const token = this.authService.getToken();
+    this.authService.watchLogin().subscribe((value) => {
+      this.isLogin = value;
+      const userData = this.authService.getToken();
+      if (userData) this.name = userData.username;
+    });
+    const userData = this.authService.getToken();
+    if (userData) {
+      this.name = userData.username;
+    }
   }
 
   logout() {

@@ -1,11 +1,12 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { verifyAuthToken } from "./verify";
 
 export const toDo_routes = (app: express.Application) => {
   app.get("/todo/:id", getAllToDos);
-  app.post("/todo", createToDo);
-  app.patch("/todo/:id", updateToDo);
-  app.delete("/todo/:id", deleteToDo);
+  app.post("/todo", verifyAuthToken, createToDo);
+  app.patch("/todo/:id", verifyAuthToken, updateToDo);
+  app.delete("/todo/:id", verifyAuthToken, deleteToDo);
 };
 
 const prisma = new PrismaClient();
@@ -51,7 +52,9 @@ const updateToDo = async (req: Request, res: Response) => {
       where: {
         id: toDoId,
       },
-      data: req.body,
+      data: {
+        isFinished: req.body.isFinished,
+      },
     });
     res.status(200).send(updateTodo);
   } catch (error) {

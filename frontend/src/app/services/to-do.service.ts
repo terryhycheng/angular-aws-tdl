@@ -30,11 +30,13 @@ export class ToDoService {
     return this.http.post<ToDo>(this.serverUrl, body);
   }
 
-  updateTodo(toDoId: number, body: { isFinished: boolean }) {
+  updateTodo(toDoId: number, body: { isFinished: boolean; token: string }) {
     return this.http.patch<ToDo>(`${this.serverUrl}/${toDoId}`, body);
   }
 
-  deleteTodo(toDoId: number) {
-    return this.http.delete<ToDo>(`${this.serverUrl}/${toDoId}`);
+  deleteTodo(toDoId: number, token: string) {
+    return this.http.delete<ToDo>(`${this.serverUrl}/${toDoId}`, {
+      body: { token: token },
+    });
   }
 }

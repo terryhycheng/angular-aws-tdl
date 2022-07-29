@@ -10,15 +10,26 @@ import { Router } from '@angular/router';
   styleUrls: ['./login-box.component.scss'],
 })
 export class LoginBoxComponent implements OnInit {
-  authForm = new FormGroup({
+  loginForm = new FormGroup({
     username: new FormControl(
       '',
       Validators.compose([Validators.required, Validators.minLength(5)])
     ),
-    password: new FormControl('', Validators.compose([Validators.required])),
-    email: new FormControl('', Validators.email),
+    password: new FormControl('', Validators.required),
+  });
+  regForm = new FormGroup({
+    username: new FormControl(
+      '',
+      Validators.compose([Validators.required, Validators.minLength(5)])
+    ),
+    password: new FormControl('', Validators.required),
+    email: new FormControl(
+      '',
+      Validators.compose([Validators.email, Validators.required])
+    ),
   });
   isRegister: boolean = false;
+  isError: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -36,16 +47,29 @@ export class LoginBoxComponent implements OnInit {
     this.isRegister = true;
   }
 
+  onSubmit() {}
+
   login() {
     const authData: AuthData = {
-      username: this.authForm.value.username!,
-      password: this.authForm.value.password!,
+      username: this.loginForm.value.username!,
+      password: this.loginForm.value.password!,
     };
-    if (this.authForm.value.email) authData.email = this.authForm.value.email;
-    //Send to server
-    console.log(authData);
-    //Check login status
     this.authService.login(authData);
-    this.authForm.reset();
+    if (!localStorage.getItem('authToken')) this.isError = true;
+    this.loginForm.reset();
+  }
+
+  register() {
+    const authData: AuthData = {
+      username: this.regForm.value.username!,
+      password: this.regForm.value.password!,
+      email: this.regForm.value.email!,
+    };
+    this.authService.register(authData);
+    this.regForm.reset();
+  }
+
+  cancelError() {
+    this.isError = false;
   }
 }

@@ -2,16 +2,10 @@ import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
-import jwt_decode from "jwt-decode";
 
 const salt: number = parseInt(process.env.SALT_ROUND as string);
 
 const prisma = new PrismaClient();
-
-interface DecodeObj {
-  username: string;
-  password: string;
-}
 
 export const auth_routes = (app: express.Application) => {
   app.post("/login", login);
@@ -31,18 +25,19 @@ const login = async (req: Request, res: Response) => {
     const isCorrectPassword = user
       ? bcrypt.compareSync(password, user.password)
       : null;
-    if (isCorrectPassword) {
+    if (isCorrectPassword && user) {
       const data = {
+        id: user.id,
         username: username,
-        email: user!.email,
+        email: user.email,
       };
-      const token = jwt.sign(data, process.env.TOKEN_SECRET!);
+      const token = jwt.sign(data, process.env.TOKEN_SECRET as string);
       res.status(200).send({ token: token });
     } else {
-      throw new Error(`Wrong login credentials.`);
+      res.status(400).send({ message: `Wrong login credentials.` });
     }
   } catch (error) {
-    res.status(401).send({ message: `${error}` });
+    res.status(400).send({ message: `${error}` });
   }
 };
 
@@ -53,31 +48,32 @@ const authCheck = async (req: Request, res: Response) => {
     const decoded = jwt.decode(token);
     res.status(200).send(decoded);
   } catch (error) {
-    res.status(401).send({ message: `${error}` });
+    res.status(400).send({ message: `${error}` });
   }
 };
 
 //Register: return JWT token
 const register = async (req: Request, res: Response) => {
+  const { username, password, email } = req.body;
   try {
-    const hash = bcrypt.hashSync(req.body.password, salt);
+    const hash = bcrypt.hashSync(password, salt);
     const data = {
-      username: req.body.username,
+      username: username,
       password: hash,
-      email: req.body.email,
+      email: email,
     };
     const newUser = await prisma.user.create({
-      data: {
-        username: data.username,
-        password: data.password,
-        email: data.email,
-      },
+      data: data,
     });
-    const token = jwt.sign(
-      { username: data.username, email: data.email },
-      process.env.TOKEN_SECRET!
-    );
-    res.status(200).send(token);
+    if (newUser) {
+      const token = jwt.sign(
+        { id: newUser.id, username: data.username, email: data.email },
+        process.env.TOKEN_SECRET as string
+      );
+      res.status(200).send({ token: token });
+    } else {
+      res.status(400).send({ message: `Cannot create user: ${newUser}` });
+    }
   } catch (error) {
     res.status(400).send({ message: `${error}` });
   }

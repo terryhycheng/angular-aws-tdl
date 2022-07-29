@@ -12,22 +12,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.toDo_routes = void 0;
 const client_1 = require("@prisma/client");
 const toDo_routes = (app) => {
-    app.get("/todo", getAllToDos);
+    app.get("/todo/:id", getAllToDos);
     app.post("/todo", createToDo);
     app.patch("/todo/:id", updateToDo);
     app.delete("/todo/:id", deleteToDo);
 };
 exports.toDo_routes = toDo_routes;
 const prisma = new client_1.PrismaClient();
+//GET to-dos by user ID
 const getAllToDos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const toDos = yield prisma.todo.findMany();
+        const toDos = yield prisma.todo.findMany({
+            where: {
+                usr_id: parseInt(req.params.id),
+            },
+            orderBy: {
+                createdAt: "asc",
+            },
+        });
         res.status(200).send(toDos);
     }
     catch (error) {
         res.status(400).send({ message: `Can't get to-dos. ${error}` });
     }
 });
+//Create Todo
 const createToDo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newToDo = yield prisma.todo.create({
@@ -43,9 +52,17 @@ const createToDo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(400).send({ message: `Can't create a new to-do. ${error}` });
     }
 });
+//Update Todo
 const updateToDo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const toDoId = parseInt(req.params.id);
     try {
+        const updateTodo = yield prisma.todo.update({
+            where: {
+                id: toDoId,
+            },
+            data: req.body,
+        });
+        res.status(200).send(updateTodo);
     }
     catch (error) {
         res
@@ -53,9 +70,16 @@ const updateToDo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             .send({ message: `Can't update to-do item (ID: ${toDoId}). ${error}` });
     }
 });
+//Delete Todo
 const deleteToDo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const toDoId = parseInt(req.params.id);
     try {
+        const deleteTodo = yield prisma.todo.delete({
+            where: {
+                id: toDoId,
+            },
+        });
+        res.status(200).send(deleteTodo);
     }
     catch (error) {
         res

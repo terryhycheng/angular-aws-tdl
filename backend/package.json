@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "serve": "nodemon ./src/server.ts"
+    "dev": "nodemon ./src/server.ts",
+    "test": "npx eslint ./src",
+    "build": "npx tsc",
+    "deploy": "npm run build && serverless deploy"
   },
   "dependencies": {
     "@prisma/client": "^4.1.0",
@@ -18,8 +21,11 @@
     "@types/jsonwebtoken": "^8.5.8",
     "@types/jwt-decode": "^3.1.0",
     "@types/node": "^18.6.1",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
+    "eslint": "^8.20.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "nodemon": "^2.0.19",
