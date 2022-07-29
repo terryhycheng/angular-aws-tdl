@@ -6,6 +6,8 @@ plugins:
 provider:
   name: aws
   runtime: nodejs14.x
+  httpApi:
+    cors: true
 
 functions:
   api:
