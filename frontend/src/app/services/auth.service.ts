@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { AuthData } from '../models/authData.model';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { AuthData } from '../models/authData.model';
 })
 export class AuthService {
   isLogin: boolean = false;
-  serverUrl: string = 'http://localhost:5000';
+  serverUrl: string = environment.apiUrl;
   private loginSub: Subject<any> = new Subject();
 
   constructor(private http: HttpClient, private router: Router) {}

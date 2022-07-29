@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ToDo } from '../models/to-do.model';
 
 type CreateTodoBody = {
@@ -13,7 +14,7 @@ type CreateTodoBody = {
   providedIn: 'root',
 })
 export class ToDoService {
-  serverUrl: string = 'http://localhost:5000/todo';
+  serverUrl: string = `${environment.apiUrl}/todo`;
   todoSub = new Subject();
 
   constructor(private http: HttpClient) {}

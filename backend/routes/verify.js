@@ -7,9 +7,8 @@ exports.verifyAuthToken = exports.token_secret = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 exports.token_secret = process.env.TOKEN_SECRET;
 const verifyAuthToken = (req, res, next) => {
-    var _a;
     try {
-        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        const token = req.body.token;
         if (token) {
             exports.token_secret
                 ? jsonwebtoken_1.default.verify(token, exports.token_secret)

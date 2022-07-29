@@ -11,11 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toDo_routes = void 0;
 const client_1 = require("@prisma/client");
+const verify_1 = require("./verify");
 const toDo_routes = (app) => {
     app.get("/todo/:id", getAllToDos);
-    app.post("/todo", createToDo);
-    app.patch("/todo/:id", updateToDo);
-    app.delete("/todo/:id", deleteToDo);
+    app.post("/todo", verify_1.verifyAuthToken, createToDo);
+    app.patch("/todo/:id", verify_1.verifyAuthToken, updateToDo);
+    app.delete("/todo/:id", verify_1.verifyAuthToken, deleteToDo);
 };
 exports.toDo_routes = toDo_routes;
 const prisma = new client_1.PrismaClient();
@@ -60,7 +61,9 @@ const updateToDo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             where: {
                 id: toDoId,
             },
-            data: req.body,
+            data: {
+                isFinished: req.body.isFinished,
+            },
         });
         res.status(200).send(updateTodo);
     }

@@ -34,7 +34,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth_routes = void 0;
 const client_1 = require("@prisma/client");
-const bcrypt = __importStar(require("bcrypt"));
+const bcrypt = __importStar(require("bcryptjs"));
 const jwt = __importStar(require("jsonwebtoken"));
 const salt = parseInt(process.env.SALT_ROUND);
 const prisma = new client_1.PrismaClient();
@@ -56,7 +56,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const isCorrectPassword = user
             ? bcrypt.compareSync(password, user.password)
             : null;
-        if (isCorrectPassword) {
+        if (isCorrectPassword && user) {
             const data = {
                 id: user.id,
                 username: username,

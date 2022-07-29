@@ -6,6 +6,8 @@ plugins:
 provider:
   name: aws
   runtime: nodejs14.x
+  httpApi:
+    cors: true
 
 functions:
   api:
@@ -15,6 +17,7 @@ functions:
 
 # only include the Prisma binary required on AWS Lambda while packaging
 package:
+  individually: true
   patterns:
     - "!node_modules/.prisma/client/libquery_engine-*"
     - "node_modules/.prisma/client/libquery_engine-rhel-*"
