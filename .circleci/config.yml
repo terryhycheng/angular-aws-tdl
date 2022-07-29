@@ -9,11 +9,11 @@ jobs:
   build:
     docker:
       # the base image can run most needed actions with orbs
-      - image: "cimg/node:14.15"
+      - image: "cimg/node:18.6"
     steps:
       # install node and checkout code
       - node/install:
-          node-version: "14.15"
+          node-version: "18.6"
       - checkout
       # Use root level package.json to install dependencies in the frontend app
       - run:
@@ -55,7 +55,7 @@ jobs:
       # more setup needed for aws, node, elastic beanstalk
     steps:
       - node/install:
-          node-version: "14.15"
+          node-version: "18.6"
       - checkout
       - aws-cli/setup
       - serverless-framework/setup
@@ -67,19 +67,9 @@ jobs:
             npm run deploy
 
 workflows:
-  udagram:
+  angular-aws-tdl:
     jobs:
       - build
-      - hold:
-          filters:
-            branches:
-              only:
-                - master
-          type: approval
-          requires:
-            - build
       - deploy:
-          requires:
-            - hold
           context:
             - Angular-AWS-TDL
