@@ -6,7 +6,7 @@
     "dev": "nodemon ./src/server.ts",
     "test": "npx eslint ./src",
     "build": "npx tsc",
-    "deploy": "npm run build && serverless deploy"
+    "deploy": "npm install -f && npm run build && serverless deploy"
   },
   "dependencies": {
     "@prisma/client": "^4.1.0",
