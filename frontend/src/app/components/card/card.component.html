@@ -6,7 +6,7 @@
     [ngClass]="toDo.isFinished ? 'text-slate-200' : ''"
   >
     <h3 class="font-black text-3xl">{{ toDo.title }}</h3>
-    <h4 class="text-xl">{{ toDo.createdAt | date }}</h4>
+    <h4 class="text-xl">{{ toDo.createdAt }}</h4>
     <p>
       {{ toDo.task }}
     </p>
