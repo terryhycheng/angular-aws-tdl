@@ -69,7 +69,12 @@ jobs:
 workflows:
   angular-aws-tdl:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+                - master
       - deploy:
           requires:
             - build

@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "npx eslint .",
-    "deploy": "npm install -f && serverless deploy"
+    "deploy": "npm install -f && npx prisma generate && serverless deploy"
   },
   "dependencies": {
     "@prisma/client": "^4.1.1",
